@@ -17,25 +17,28 @@ namespace ProjConcilig
         {
             InitializeComponent();
         }
+
         DataTable dt = new DataTable();
         private void Form2_Load(object sender, EventArgs e)
         {
             CarregarDados();
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
         private void CarregarDados()
         {
             string connectionString = "Server=Bipe01;Database=ContratoFuncionarios;Trusted_Connection=True;";
-            string query = "SELECT * FROM clientes";
+            string query = "SELECT nome, CPF, Contrato, Produto, Vencimento, Valor FROM clientes";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
-                DataTable dt = new DataTable();
+                dt.Clear(); // Limpa os dados antigos
                 adapter.Fill(dt);
                 dataGridView1.DataSource = dt; // Exibe os dados no DataGridView
             }
         }
+
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -54,7 +57,7 @@ namespace ProjConcilig
             string filtro = txtFiltro.Text;
             if (!string.IsNullOrEmpty(filtro))
             {
-                dt.DefaultView.RowFilter = $"Nome LIKE '%{filtro}%' OR CONVERT(Data, 'System.String') LIKE '%{filtro}%'";
+                dt.DefaultView.RowFilter = $"Nome LIKE '%{filtro}%'";
             }
             else
             {
