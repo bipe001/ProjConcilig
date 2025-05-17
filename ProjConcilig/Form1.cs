@@ -33,6 +33,9 @@ namespace ProjConcilig
                 string filePath = openFileDialog.FileName;
                 ImportarCSV(filePath);
             }
+            Principal principal = new Principal();
+            this.Hide();
+            principal.Show();
         }
 
         private void ImportarCSV(string filePath)
