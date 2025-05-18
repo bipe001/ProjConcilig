@@ -20,6 +20,7 @@ namespace ProjConcilig
         private void btnLogin_Click(object sender, EventArgs e)
         {
             TelaLogin login = new TelaLogin();
+            this.Hide();
             login.Show();
         }
 

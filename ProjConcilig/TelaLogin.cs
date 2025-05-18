@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ProjConcilig.Model;
 
 namespace ProjConcilig
 {
@@ -20,18 +21,19 @@ namespace ProjConcilig
             InitializeComponent();
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private void btnLogin_Click(object sender, EventArgs e) //Botão Login que chama o método Autentica usuario
         {
             bool validado = ValidaCampos();
             if (validado)
             {
                 AutenticaUsuario(txtUsername.Text, txtPassword.Text);
+                
             }
         }
 
 
 
-        private bool ValidaCampos()
+        private bool ValidaCampos() //Valida se os campos não estão vazios
         {
             if (string.IsNullOrEmpty(txtUsername.Text)
                 || string.IsNullOrEmpty(txtPassword.Text))
@@ -43,12 +45,11 @@ namespace ProjConcilig
                 return true;
         }
 
-        private void AutenticaUsuario(string username, string password)
+        private void AutenticaUsuario(string username, string password) //Autentica se existe o usuário no banco de dados
         {
-            string connectionString = "Server=Bipe01;Database=ContratoFuncionarios;Trusted_Connection=True;";
             string query = "SELECT COUNT(*) FROM Usuarios WHERE Username = @username AND Password = @password";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(Global.connectionString))
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -60,7 +61,7 @@ namespace ProjConcilig
 
                     if (userCount > 0)
                     {
-                        Principal principal = new Principal();
+                        Principal principal = new Principal(username);
                         this.Hide();
                         principal.Show();
                     }
@@ -69,20 +70,20 @@ namespace ProjConcilig
                         MessageBox.Show("Usuário ou senha incorretos.");
                     }
                 }
-
             }
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e) //Botão cancel, fecha a janela
         {
+            TelaAutenticacao telaAutenticacao = new TelaAutenticacao();
             this.Close();
+            telaAutenticacao.Show();
         }
 
-        private void txtPassword_TextChanged(object sender, EventArgs e)
+        private void txtPassword_KeyDown(object sender, KeyEventArgs e) //Método para ativar o btnLogin quando ENTER for pressionado
         {
-
+            if (e.KeyCode == Keys.Enter)
+                btnLogin_Click(sender, e);
         }
-
-       
     }
 }
